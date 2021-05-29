@@ -1,0 +1,128 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    background-color: rgb(247, 245, 245);
+}
+
+#upload {
+    width: 800px;
+    height: 700px;
+    margin: 30px auto;
+    background-color: white;
+}
+
+#title {
+    width: 520px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    margin:0 auto;
+    text-shadow: gray 1px 5px 5px;
+}
+
+#upload input[type="file"] {
+    display: none;
+}
+
+#content {
+    width: 520px;
+    margin: 0px auto;
+}
+
+#upload input[type="text"] {
+    width: 300px;
+    height: 40px;
+    text-indent: 10px;
+    font-size: 16px;
+    outline-style: none;
+}
+
+.clickbtn {
+    width: 100px;
+    height: 40px;
+    font-weight: bold;
+    color: white;
+    background-color: rgb(6, 154, 207);
+    border-radius: 5px;
+    border: none;
+    outline-style: none;
+    cursor: pointer;
+}
+
+#cimg {
+    float: left;
+    width: 300px;
+    height: 150px;
+    margin-top: 50px;
+    margin-left: 140px;
+}
+
+#cover {
+    width: 150px;
+    height: 150px;
+    border: 2px dashed rgb(204, 202, 202);
+}
+
+#cimg span {
+    font-size: 12px;
+    color: rgb(6, 154, 207);
+    cursor: pointer;
+}
+
+#coverbtn {
+    float: left;
+    width: 210px;
+    margin-top: 165px;
+    margin-left: 9px;
+}
+#toname{
+    width: 520px;
+    float: left;
+    margin-top: 50px;
+    margin-left: 140px;
+}
+
+#info{
+    width: 520px;
+    float: left;
+    margin-top: 50px;
+    margin-left: 140px;
+    margin-bottom: 50px;
+}
+#vinfo{
+    float: left;
+    width: 300px;
+    height: 100px;
+    outline-style: none;
+    font-size: 16px;
+    margin-right: 6px;
+    text-indent: 10px;
+    resize: none;
+}
+#info div{
+    margin-top: 60px;
+}
+#return{
+    float: left;
+    margin-top: 40px;
+    width: 800px;
+    height: 50px;
+}
+#return button{
+    display: block;
+    margin: 0 auto;
+    width: 100px;
+    height: 40px;
+    border: none;
+    border-radius:5px ;
+    outline-style: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: rgb(6, 154, 207);
+    cursor: pointer;
+}
+

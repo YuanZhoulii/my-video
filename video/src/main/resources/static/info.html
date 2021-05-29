@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="js/axios.js"></script>
+    <script src="js/vue.js"></script>
+    <link rel="stylesheet" href="css/info.css">
+    <link rel="icon" href="image/logo.png" type="image/x-icon"/>
+</head>
+
+<body>
+    <div id="personalInfo">
+        <div id="title">个人信息</div>
+        <div id="content">
+            <table>
+                <tr>
+                    <td>
+                        <input type="file" ref="headimg" v-on:change="headimg($event)" accept=".jpg">
+                        <div class="head">头像</div>
+                    </td>
+                    <td><img :src="Src" @click="getImg" onerror="this.src='./image/hello.jpg';this.οnerrοr=null"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="head">昵称</div>
+                    </td>
+                    <td><input type="text" v-model="nickname"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="head">Email</div>
+                    </td>
+                    <td><input type="text" v-model="email"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="head">手机号</div>
+                    </td>
+                    <td><input type="number" v-model="mobile"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="head">性别</div>
+                    </td>
+                    <td><select v-model="gender">
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select></td>
+                </tr>
+            </table>
+        </div>
+        <div id="btndiv">
+            <input type="submit" class="submit" @click="submit">
+            <button id="return" @click="toindex">返回首页</button>
+        </div>
+    </div>
+    <script>
+        axios.defaults.withCredentials = true;
+        new Vue({
+            el: "#personalInfo",
+            data: {
+                id: null,
+                email: "",
+                nickname: "",
+                mobile: "",
+                gender: "男",
+                file: "",
+                Src: "",
+            },
+            created() {
+                this.addinfo();
+            },
+            methods: {
+                getImg() {
+                    this.$refs.headimg.dispatchEvent(new MouseEvent('click'));
+                },
+                headimg(event) {
+                    let vm = this;
+                    let img = this.$refs.headimg.files[0];
+                    console.log(img);
+                    this.file = img;
+                    let rd = new FileReader();
+                    rd.readAsDataURL(img);
+                    rd.onloadend = function (e) {
+                        vm.Src = this.result;
+                    }
+                },
+
+                submit() {
+                    let vm = this;
+                    console.log("vm.file" + vm.file);
+                    console.log(this.id, this.email, this.nickname, this.mobile, this.gender);
+                    // 上传个人信息
+                    let url1 = `/user/update`;
+                    axios.post(url1, {
+                        "id": vm.id,
+                        "email": vm.email,
+                        "nickname": vm.nickname,
+                        "mobile": vm.mobile,
+                        "gender": vm.gender
+                    }).then(function (resp) {
+                        console.log(resp);
+                        // 上传头像
+                        if (vm.file != "") {
+                            let formData = new FormData();
+                            formData.append('userId', vm.id);
+                            formData.append('file', vm.file);
+                            console.log(vm.file);
+                            let url2 = `/upload/avatar`;
+                            ax = axios.post(url2, formData, {
+                                headers: { 'Content-Type': 'multipart/form-data' },
+                                withCredentials: true
+                            })
+                            ax.then(function (resp) {
+                                console.log(resp);
+                                console.log(vm.id);
+                                //图片有缓存，添加时间戳可以刷新图片了
+                                Vue.set(vm, 'Src', "/download/avatar?userId=" + vm.id + "&time=" + Date.now());
+
+                                console.log("vm.Src" + vm.Src);
+
+                            })
+                        }
+                        alert("用户信息更新成功");
+                    })
+
+                    // // 上传头像
+                    // if (vm.file != "") {
+                    //     let formData = new FormData();
+                    //     formData.append('userId', vm.id);
+                    //     formData.append('file', vm.file);
+                    //     console.log(vm.file);
+                    //     let url2 = `/upload/avatar`;
+                    //     ax = axios.post(url2, formData, {
+                    //         headers: { 'Content-Type': 'multipart/form-data' },
+                    //         withCredentials: true
+                    //     })
+                    //     ax.then(function (resp) {
+                    //         console.log(resp);
+                    //         console.log(vm.id);
+                    //         //图片有缓存，添加时间戳可以刷新图片了
+                    //         Vue.set(vm, 'Src', "/download/avatar?userId=" + vm.id + "&time=" + Date.now());
+
+                    //         console.log("vm.Src" + vm.Src);
+                    //     })
+
+                    // }
+
+
+                },
+                addinfo() {
+                    let vm = this;
+                    let url1 = `/user/info`;
+                    axios.post(url1, { withCredentials: true }).then(function (resp) {
+                        if (resp.data.flag) {
+                            console.log(resp);
+                            vm.nickname = resp.data.user.nickname;
+                            vm.email = resp.data.user.email;
+                            vm.mobile = resp.data.user.mobile;
+                            vm.gender = resp.data.user.gender;
+                            vm.id = resp.data.user.id;
+                            vm.Src = "/download/avatar?userId=" + vm.id;
+                            console.log();
+                        } else {
+                            window.location.href = "/login.html";
+                        }
+
+                    })
+                },
+                toindex() {
+                    window.location.href = "/index.html";
+                }
+            },//methods
+
+        })
+    </script>
+</body>
+
+</html>

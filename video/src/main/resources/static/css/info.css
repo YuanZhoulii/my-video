@@ -1,0 +1,126 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    background-color: rgb(247, 245, 245);
+}
+
+#personalInfo {
+    width: 600px;
+    height: 600px;
+    background-color: white;
+    margin: 50px auto;
+}
+
+#title {
+    width: 150px;
+    margin: 0 auto;
+    font-size: 30px;
+    color: hotpink;
+    font-weight: bold;
+    text-align: center;
+}
+
+#content {
+    width: 400px;
+    height: 430px;
+    margin: 30px auto;
+}
+
+#content table {
+    width: 400px;
+    margin: 20px auto;
+}
+
+#content img {
+    width: 50px;
+    height: 50px;
+    border-radius: 28px;
+    border: 1px solid hotpink;
+    cursor: pointer;
+}
+
+.head {
+    width: 130px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+table input {
+    width: 250px;
+    height: 30px;
+    outline-style: none;
+}
+
+tr {
+    display: block;
+    margin-bottom: 50px;
+}
+
+select {
+    display: block;
+    width: 250px;
+    height: 30px;
+    background-color: rgb(27, 138, 212);
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    border-radius: 4px;
+    outline-style: none;
+    cursor: pointer;
+}
+
+option {
+    background-color: white;
+    font-size: 14px;
+    font-weight: bold;
+    color: gray;
+    outline-style: none;
+}
+
+.submit {
+    float: left;
+    display: block;
+    width: 60px;
+    height: 30px;
+    background-color: rgb(27, 138, 212);
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    border-radius: 4px;
+    border: none;
+    outline-style: none;
+    cursor: pointer;
+    margin-right: 68px;
+}
+
+.submit:hover {
+    margin-top:-5px;
+}
+
+input[type="file"] {
+    display: none;
+}
+#return{
+    display: block;
+    float: left;
+    width: 100px;
+    height: 30px;
+    background-color: rgb(27, 138, 212);
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    border-radius: 4px;
+    border: none;
+    outline-style: none;
+    cursor: pointer;
+}
+#return:hover{
+    margin-top:-5px;
+}
+#btndiv{
+    width: 228px;
+    margin: 0 auto;
+}

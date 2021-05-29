@@ -1,0 +1,126 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+#title {
+    width: 1000px;
+    font-size: 30px;
+    font-weight: bold;
+    margin: 40px auto;
+    text-shadow: gray 1px 5px 3px;
+}
+
+#return {
+    display: block;
+    width: 100px;
+    height: 40px;
+    float: right;
+    background-color: hotpink;
+    border: none;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    outline-style: none;
+}
+
+.videos {
+    width: 1000px;
+    height: 600px;
+    margin: 50px auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    border: 1px solid gray;
+}
+
+.video {
+    width: 200px;
+    height: 280px;
+    margin-right: 45px;
+    border: 1px solid rgba(231, 229, 229, 0.87);
+    cursor: pointer;
+}
+
+.video:hover {
+    border: 1px solid rgba(248, 70, 16, 0.911);
+}
+
+#vtitle span {
+    color: rgb(6, 154, 207);
+}
+
+.vimg {
+    width: 180px;
+    height: 180px;
+    margin: 10px;
+    -moz-box-shadow: 0 0 10px rgb(139, 136, 138);
+    -webkit-box-shadow: 0 0 10px rgb(139, 136, 138);
+    box-shadow: 0 0 10px rgb(139, 136, 138);
+
+}
+
+.intro {
+    margin-left: 10px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#page {
+    margin: 20px auto;
+    width: 750px;
+    margin-bottom: 200px;
+}
+
+.pagenum li {
+    float: left;
+    padding: 10px 15px;
+    list-style: none;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid grey;
+}
+
+.jump {
+    width: 300px;
+    margin-left: 60px;
+    float: left;
+}
+
+.l1 {
+    background-color: red;
+    color: white;
+}
+
+#page li:hover {
+    background-color: red;
+    color: white;
+}
+
+.jumpbtn {
+    display: inline-block;
+    width: 80px;
+    height: 40px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: red;
+    border: none;
+    outline-style: none;
+    text-align: center;
+}
+
+.printpage {
+    width: 50px;
+    height: 20px;
+    font-size: 16px;
+    text-align: center;
+}
+#vtitle {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

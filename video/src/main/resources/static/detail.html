@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/detail.css">
+    <script src="js/vue.js"></script>
+    <script src="js/axios.js"></script>
+    <link rel="icon" href="image/logo.png" type="image/x-icon"/>
+</head>
+
+<body>
+    <div id="play">
+        <div class="logo">
+            <img src="image/logo.png">
+            <span>杰哥视频</span>
+        </div>
+        <div id="title" v-text="info.title"></div>
+        <div class="content">
+            <div id="like" @click="change" :class="{'active':isActive}" :title="likeinfo">❤</div>
+            <span>收藏：</span>
+            <div class="intro">上传时间: <span v-text="info.createTime"></span></div>
+            <div class="intro">点击数量: <span v-text="info.viewCount"></span> 次</div>
+        </div>
+        视频描述：<span v-text="info.desc"></span>
+        <video controls autoplay v-bind:src="url" id="video"></video>
+    </div>
+    <script>
+        axios.defaults.withCredentials = true;
+        new Vue({
+            el: "#play",
+            data: {
+                url: "",
+                currentUserId: null,
+                isActive: false,
+                likeinfo: "加入收藏~",
+                info: {
+                    id: null,
+                    title: "",
+                    createTime: "",
+                    viewCount: "",
+                    desc: "",
+                    userId: null
+                }
+            },
+
+            created() {
+                this.getCurrentUser();
+                this.getVideoFile();
+                this.getVideoInfo();
+            },
+            methods: {
+                getCurrentUser() {
+                    let vm = this;
+                    let url = `/user/info`;
+                    axios.post(
+                        url,
+                        {
+                            headers: {
+                                "Content-Type": "application/json;charset=utf-8"
+                            },
+                            withCredentials: true
+                        }
+                    ).then(function (resp) {
+                        console.log(resp);
+                        //如果用户已登录
+                        if (resp.data.flag) {
+                            //取得用户id
+                            vm.currentUserId = resp.data.user.id;
+                            console.log(vm.currentUserId);
+                            //获取用户收藏状态
+                            vm.getCollectStatus();
+                        }
+
+                    })
+                },
+                getVideoFile() {
+                    //获取url中的id
+                    this.info.id = this.getUrlParms("id");
+                    if (this.info.id == null) {
+                        alert("该视频不存在")
+                        window.location.href = "/index.html";
+                    }
+                    //请求视频文件
+                    this.url = "/download/video?videoId=" + this.info.id;
+                },
+                // 获取地址栏参数，name:参数名称
+                getUrlParms(name) {
+                    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                    var r = window.location.search.substr(1).match(reg);
+                    if (r != null) return unescape(r[2]);
+                    return null;
+                },
+                //更改收藏按钮状态
+                change() {
+                    //判断当前用户登录状态
+                    if (this.currentUserId != null) {
+                        let vm = this;
+                        let url = "";
+                        this.isActive = !this.isActive;
+                        if (this.isActive == true) {
+                            this.likeinfo = "已收藏~";
+                            url = `/collect/save`;
+                        } else {
+                            this.likeinfo = "加入收藏~";
+                            url = `/collect/delete`;
+                        }
+                        axios.post(
+                            url,
+                            {
+                                "videoId": vm.info.id
+                            },
+                            {
+                                headers: {
+                                    "Content-Type": "application/json;charset=utf-8"
+                                },
+                                withCredentials: true
+                            }
+                        )
+                    } else {
+                        alert("您尚未登录，请登录后收藏");
+                        window.location.href = "/login.html";
+                    }
+
+                },
+                getVideoInfo() {
+                    let vm = this;
+                    let url = `/video/info?id=` + this.info.id;
+                    axios.get(
+                        url,
+                        {
+                            headers: {
+                                "Content-Type": "application/json;charset=utf-8"
+                            },
+                            withCredentials: true
+                        }
+                    ).then(function (resp) {
+                        console.log(resp);
+                        if (resp.data.flag == true) {
+                            //保存视频信息
+                            vm.info = resp.data.video;
+                            //返回的时间包括时间，这里截取掉不显示
+                            vm.info.createTime = vm.info.createTime.split(" ")[0];
+                        }
+                    })
+                },
+                getCollectStatus() {
+                    let vm = this;
+                    let url = `/collect/find?videoId=` + this.info.id;
+                    axios.get(
+                        url,
+                        {
+                            headers: {
+                                "Content-Type": "application/json;charset=utf-8"
+                            },
+                            withCredentials: true
+                        }
+                    ).then(function (resp) {
+                        console.log(resp);
+                        if (resp.data.flag) {
+                            vm.isActive = resp.data.status;
+                        }
+
+                    })
+
+
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

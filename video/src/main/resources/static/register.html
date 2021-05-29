@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/register.css">
+    <script src="js/vue.js"></script>
+    <script src="js/axios.js"></script>
+    <link rel="icon" href="image/logo.png" type="image/x-icon"/>
+</head>
+
+<body>
+    <div id="register">
+        <div id="title"><span>注册</span></div>
+        <div id="content">
+            <input type="text" placeholder="用户名" class="inputdata" v-model="user.username">
+            <input type="password" placeholder="密码(6-16个字符组成，区分大小写)" class="inputdata" v-model="user.password">
+            <input type="checkbox" @click="change">我已同意<span>《用户协议》</span>
+            <div><button v-bind:class="{'active':isActive}" @click="register">注册</button></div>
+        </div>
+    </div>
+    <script>
+        new Vue({
+            el: "#register",
+            data: {
+                isActive: false,
+                user: {
+                    username: "",
+                    password: ""
+                }
+            },
+            methods: {
+                change() {
+                    this.isActive = !this.isActive
+                    // console.log(this.isActive);
+                },
+                register() {
+                    console.log(this.user.username, this.user.password);
+                    if (this.isActive == true) {
+                        var url = `/user/regist`;
+                        axios.post(url, this.user).then(function (resp) {
+                            // 打印数据
+                            console.log(resp);
+                            alert(resp.data.msg);
+                            if (resp.data.flag) {
+                                window.location.href = "/login.html";
+                            }
+                        })
+                    } else {
+                        alert("请先同意用户协议！")
+                    }
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>

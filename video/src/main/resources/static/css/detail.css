@@ -1,0 +1,75 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+#play {
+    width: 1000px;
+    margin: 10px auto;
+}
+
+.logo {
+    float: right;
+}
+
+.logo img {
+    width: 100px;
+    height: 100px;
+    float: left;
+}
+
+.logo span {
+    display: inline-block;
+    margin-top: 33px;
+    font-size: 30px;
+
+}
+
+#title {
+    font-size: 30px;
+    font-weight: bold;
+    text-shadow: gray 1px 5px 5px;
+}
+
+#play div {
+    margin-bottom: 10px;
+}
+
+.content {
+    width: 350px;
+}
+
+.content>span{
+    display: block;
+    float: right;
+    margin-top: 30px;
+}
+#play>span {
+    display: inline-block;
+    width: 100%;
+    word-wrap: break-word;
+    white-space: normal;
+    color: hotpink;
+}
+.active{
+    color: rgb(238, 25, 10);
+}
+#like {
+    margin-top: 20px;
+    float: right;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.intro {
+    width:300px;
+}
+
+.intro span {
+    color: rgb(13, 123, 226);
+}
+
+#video {
+    width: 1000px;
+    box-shadow: 2px 2px 5px #000;
+}

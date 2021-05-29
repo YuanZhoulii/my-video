@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/like.css">
+    <script src="js/axios.js"></script>
+    <script src="js/vue.js"></script>
+    <link rel="icon" href="image/logo.png" type="image/x-icon"/>
+</head>
+
+<body>
+    <div id="like">
+        <div id="title"><span> 已收藏:</span>
+            <input type="button" value="返回首页" @click="toindex" id="return">
+        </div>
+        <div class="videos">
+            <div class="video" v-for="(item, index) in videoList" :key="index"
+                @click="toVideo(item.id,item.title,item.createTime,item.viewCount)">
+                <div><img v-bind:src=`/download/cover?videoId=${item.id}` :title="item.title"
+                        onerror="this.src='./image/demo.png';this.οnerrοr=null" class="vimg"></div>
+                <div class="intro" id="vtitle">视频标题: <span>{{item.title}}</span></div>
+                <div class="intro">上传时间: <span>{{item.createTime.split(" ")[0]}}</span></div>
+                <div class="intro">点击数量: <span>{{item.viewCount}}</span> 次</div>
+            </div>
+        </div>
+        <!-- 页面选择 -->
+        <div class="size" id="page">
+            <div class="pagenum">
+                <ul>
+                    <!-- 点击实现跳转前一页页面 -->
+                    <li v-if="pageNum>1" v-on:click="pageNum--,goPage(pageNum)">＜</li>
+                    <li v-if="pageNum==1" class="banclick">＜</li>
+                    <li v-for="i in indexs" @click="goPage(i)" v-bind:class="{'l1':i==pageNum}">{{i}}</li>
+                    <!-- 点击实现跳转后一页页面 -->
+                    <li v-if="pageNum!=totalPage" v-on:click="pageNum++,goPage(pageNum)">＞</li>
+                    <li v-if="pageNum==totalPage" class="banclick">＞</li>
+                    <li>共{{totalPage}}页</li>
+                </ul>
+                <!-- 页面跳转至输入的页面数 -->
+                <div class="jump">
+                    到第<input type="number" value="1" class="printpage">页
+                    <input type="button" value="确定" class="jumpbtn" v-on:click="pageSkip()">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        new Vue({
+            el: "#like",
+            data: {
+
+                title: "",
+                createTime: "",
+                viewCount: "",
+                pageNum: 1,
+                size: 8,
+                totalPage: 8,
+                skipPage: 1,
+                videoList: []
+            },
+            created() {
+                this.getVideos();
+            },
+            methods: {
+                toindex() {
+                    window.location.href = "/index.html";
+                },
+                goPage(num) {
+                    if (num != this.pageNum) {
+                        this.pageNum = num;
+                    }
+                    this.getVideos();
+                },
+                changeSize() {
+                    this.getVideos();
+                },
+                pageSkip() {
+                    var maxPage = this.totalPage;
+                    var skipPage = Number(document.querySelector(".printpage").value);
+                    if (!skipPage) {
+                        alert("请输入跳转页码哟!");
+                        return;
+                    } else if (skipPage < 1 || skipPage > maxPage) {
+                        alert("您输入的页码超过页数范围了哟！");
+                        return;
+                    } else {
+                        //this.cur=skipPage;
+                        this.goPage(skipPage);
+                    }
+                },
+                getVideos() {
+                    let vm = this;
+                    let url = "/collect/list?currentPage=" + this.pageNum + "&pageSize=" + this.size;
+                    axios.get(url, {
+                        headers: {
+                            "Content-Type": "application/json;charset=utf-8"
+                        },
+                        withCredentials: true
+                    }).then(function (resp) {
+                        console.log(resp);
+                        vm.videoList = resp.data.videos.list;
+                        vm.totalPage = resp.data.videos.totalPage;
+                        vm.pageNum = resp.data.videos.currentPage;
+                    })
+                },
+                toVideo(id, title, time, count) {
+                    var url = `/video/count`;
+                    console.log("like.html-id:" + id + "viewCount:" + count);
+                    // alert("去详情页");
+                    axios.post(
+                        url,
+                        {
+                            "id": id,
+                            "viewCount": count
+                        }
+                    ).then(function (resp) {
+                        console.log(resp);
+                        window.location.href = "/detail.html?id=" + id;
+                    })
+
+                },
+            },
+            // 实现一次只显示5个页面数
+            computed: {
+                indexs() {
+                    var left = 1;
+                    var right = this.totalPage;
+                    var arr = [];
+                    if (this.totalPage >= 5) {
+                        if (this.pageNum > 2 && this.pageNum < this.totalPage - 1) {
+                            left = this.pageNum - 2;
+                            right = this.pageNum + 2;
+                        } else if (this.pageNum <= 3) {
+                            left = 1;
+                            right = 5;
+                        } else {
+                            left = this.totalPage - 4;
+                            right = this.totalPage;
+                        }
+                    }
+                    while (left <= right) {
+                        arr.push(left);
+                        left++;
+                    }
+                    return arr;
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

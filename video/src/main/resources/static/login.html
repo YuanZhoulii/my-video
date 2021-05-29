@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/login.css">
+    <script src="js/vue.js"></script>
+    <script src="js/axios.js"></script>
+    <link rel="icon" href="image/logo.png" type="image/x-icon"/>
+</head>
+
+<body>
+    <div>
+        <div id="login">
+            <img src="image/logo.png" class="logoimg">
+            <div id="content">
+                <span>LOGIN</span>
+                <input type="text" placeholder="请输入用户名" class="inputdata" v-model="user.username">
+                <input type="password" placeholder="请输入密码" class="inputdata" v-model="user.password">
+                <a id="hint" @click="toregister">没有账号？去注册一个吧~</a>
+
+                <div>
+                    <button @click="login">登录</button>
+                    <button @click="toregister">注册</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            axios.defaults.withCredentials = true;
+            new Vue({
+                el: "#login",
+                data: {
+                    user: {
+                        username: "",
+                        password: "",
+                    },
+                },
+                methods: {
+                    login() {
+                        // console.log(this.user.username, this.user.password);
+                        var vm = this;
+                        var url = `/user/login`;
+                        axios.post(
+                            url,
+                            this.user,
+                            {
+                                headers: {
+                                    "Content-Type": "application/json;charset=utf-8"
+                                },
+                                withCredentials: true
+                            }
+                        ).then(function (resp) {
+                            console.log(resp);
+                            if (resp.data.flag == true) {
+                                window.location.href = "/index.html"
+                            }
+                        })
+                    },
+                    toregister() {
+                        window.location.href = "/register.html"
+                    },
+                },
+            })
+        </script>
+</body>
+
+</html>

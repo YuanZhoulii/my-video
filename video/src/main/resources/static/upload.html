@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="js/axios.js"></script>
+    <script src="js/vue.js"></script>
+    <link rel="stylesheet" href="css/upload.css">
+    <link rel="icon" href="image/logo.png" type="image/x-icon"/>
+</head>
+
+<body>
+    <div id="upload">
+        <div id="title"><span>上传你喜欢的视频吧~</span></div>
+
+        <div id="toname">
+            <input type="text" placeholder="给你的视频取个可爱的标题吧~" id="name" v-model="msg">
+            <input type="button" value="重命名" class="clickbtn" @click="clear">
+            <!-- <input type="button" value="确定" class="clickbtn"> -->
+        </div>
+        <div id="info">
+            <textarea id="vinfo" placeholder="添加视频描述" v-model="info"></textarea>
+            <div>
+                <input type="button" value="清除" class="clickbtn" @click="clearinfo">
+                <input type="button" value="确定" class="clickbtn" title="上传标题及描述" @click="save">
+            </div>
+        </div>
+
+
+        <div id="content">
+            <input type="file" ref="chooseFile" v-on:change="fileName($event)" accept=".mp4">
+            <input type="file" ref="chooseImg" v-on:change="fileImg($event)" accept=".jpg">
+            <input type="text" id="fileName" v-model="filename">
+            <input type="button" value="浏览" @click="getFile" class="clickbtn">
+            <input type="submit" value="上传" class="clickbtn" @click="subfile" title="上传视频文件">
+        </div>
+
+
+        <div id="cimg">
+            <img id="cover" @click="getImg" :src="Src" onerror="this.src='./image/demo.png';this.οnerrοr=null">
+            <span @click="getImg">选择一个好看的封面吧~</span>
+        </div>
+        <div id="coverbtn">
+            <input type="button" value="浏览" @click="getImg" class="clickbtn">
+            <input type="submit" value="上传" class="clickbtn" @click="subimg" title="上传封面图片">
+        </div>
+        <div id="return">
+            <button @click="toindex">返回首页</button>
+        </div>
+
+    </div>
+    </div>
+    <script>
+        axios.defaults.withCredentials = true;
+        new Vue({
+            el: "#upload",
+            data: {
+                filename: "",
+                msg: "",
+                Src: "",
+                info: "",
+                userId: "",
+                videoId: "",
+            },
+            created() {
+                this.getId();
+            },
+            methods: {
+                getId() {
+                    let vm = this;
+                    var url = `/user/info`;
+                    axios.post(url, { withCredentials: true }).then(function (resp) {
+                        console.log(resp);
+                        if (resp.data.flag) {
+                            vm.userId = resp.data.user.id;
+                        }
+                    })
+
+                },
+                getFile() {
+                    this.$refs.chooseFile.dispatchEvent(new MouseEvent('click'));
+                },
+                fileName(event) {
+                    var fname = this.$refs.chooseFile.files[0].name;
+                    this.filename = fname;
+
+
+                },
+                getImg() {
+                    this.$refs.chooseImg.dispatchEvent(new MouseEvent('click'));
+                },
+                fileImg(event) {
+                    var imgsrc = this.$refs.chooseImg.files[0];
+                    let vm = this;
+                    let rd = new FileReader();
+                    rd.readAsDataURL(imgsrc);
+                    rd.onloadend = function (e) {
+                        vm.Src = this.result;
+                    }
+                },
+                clear() {
+                    this.msg = null;
+                },
+                clearinfo() {
+                    this.info = null;
+                },
+                subfile() {
+                    if (this.videoId == "") {
+                        alert("请先上传添加标题和视频描述")
+                    } else {
+
+                        let vm = this;
+                        var uploadfile = this.$refs.chooseFile.files;
+                        console.log(uploadfile[0]);
+
+                        let formData = new FormData();
+                        formData.append('videoId', this.videoId);
+                        formData.append('file', uploadfile[0]);
+                        var url = `/upload/video`;
+                        axios.post(url, formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then(function (resp) {
+                            console.log(resp);
+                            alert(resp.data.msg)
+                            vm.isActive = !resp.data.flag;
+                            alert("上传视频成功")
+                        })
+                    }
+                },
+                subimg() {
+                    if (this.videoId == "") {
+                        alert("请先上传添加标题和视频描述")
+                    } else {
+                        var img = this.$refs.chooseImg.files;
+                        console.log(img[0]);
+                        let vm = this;
+
+
+
+
+                        let formData = new FormData();
+                        formData.append('videoId', this.videoId);
+                        formData.append('file', img[0]);
+                        var url = `/upload/cover`;
+                        axios.post(url, formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then(function (resp) {
+                            console.log(resp);
+                            alert(resp.data.msg)
+                            vm.Src = "/download/cover?videoId=" + vm.videoId;
+                            console.log(vm.Src);
+                        })
+                    }
+
+                },
+                save() {
+                    let vm = this;
+                    if (this.msg == "" | this.info == "") {
+                        alert("请先添加标题和视频描述")
+                    } else {
+                        // console.log(this.msg, this.info);
+                        var url = "/video/save";
+                        axios.post(url, {
+                            "title": vm.msg,
+                            "desc": vm.info,
+                            "userId": vm.userId
+                        }).then(function (resp) {
+                            console.log(resp);
+                            vm.videoId = resp.data.video.id;
+                            alert("上传成功，请继续下一步吧~")
+                        })
+                    }
+                },
+                toindex() {
+                    window.location.href = "/index.html";
+                },
+            }
+
+        })
+    </script>
+</body>
+
+</html>

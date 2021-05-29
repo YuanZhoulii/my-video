@@ -1,0 +1,9 @@
+# 配置数据源
+spring:
+  datasource:
+    username: root
+    password: 97588016
+    url: jdbc:mysql://localhost:3306/my_video?useUnicode=true&characterEncoding=UTF8&serverTimezone=UTC
+    # 可省略
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
